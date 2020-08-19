@@ -12,13 +12,10 @@ def ddx(function, x, y, t, h):
 def ddy(function, x, y, t, h):
     return  (function(x, y + h, t) - function(x, y, t))/h
 
-def fieldStrengthx(positionx, positiony, time):
+def fieldStrength(positionx, positiony, time):
     #return 10*np.sin(positionx*10 - 10*time*dt) + 10*positionx*np.cos(positiony*10 + 10*time*dt)
-    return (positionx)** 4  
+    return (positionx) ** 4 + (positiony) ** 4
 
-def fieldStrengthy(positionx, positiony, time):
-    #return 10*np.sin(positiony*10 - 10*time*dt) + 10*positiony*np.cos(positionx*10 + 10*time*dt)
-    return (positiony) ** 4
 
 def interactx(part1,part2):
     if (((part1.x-part2.x)**2 + (part1.y - part2.y)**2) > 0.01):
@@ -48,9 +45,9 @@ class particle:
         self.time = 0
 
     def field(self):
-        accelerationx = (self.charge)*(-ddx(fieldStrengthx, self.x, self.y, self.time, 0.001))/(self.mass)
+        accelerationx = (self.charge)*(-ddx(fieldStrength, self.x, self.y, self.time, 0.001))/(self.mass)
         self.accelerationx = accelerationx
-        accelerationy = (self.charge)*(-ddy(fieldStrengthy, self.x, self.y, self.time, 0.001))/(self.mass)
+        accelerationy = (self.charge)*(-ddy(fieldStrength, self.x, self.y, self.time, 0.001))/(self.mass)
         self.accelerationy = accelerationy
         
     def motion(self):
@@ -121,10 +118,8 @@ gridx = np.linspace(-10, 10, 100)
 gridy = np.linspace(-10, 10, 100)
 
 A, B = np.meshgrid(gridx, gridy)
-C = fieldStrengthx(A, B, 0)
-D = fieldStrengthy(A, B, 0)
+C = fieldStrength(A, B, 0)
 plt.contour(A, B, C, colors = 'black')
-plt.contour(A, B, D, colors = 'red')
 plt.show()
 
 
